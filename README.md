@@ -80,5 +80,6 @@ print("Predicción para la nueva pregunta:", prediccion_texto[0])
 
 - [@Mailet2997](https://github.com/mailet2997)
 - [@ThomBertel](https://www.instagram.com/thomcruzbertel)
+- [@AudithGuerrero](https://www.instagram.com/audithmariaguerrero)
 
 
