@@ -79,6 +79,6 @@ print("Predicción para la nueva pregunta:", prediccion_texto[0])
 ## Authors
 
 - [@Mailet2997](https://github.com/mailet2997)
-- 
+- [@ThomBertel](https://www.instagram.com/thomcruzbertel)
 
 
