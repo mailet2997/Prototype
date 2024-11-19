@@ -1,67 +1,89 @@
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.preprocessing import LabelEncoder
-from sklearn import metrics
+from sklearn.model_selection import train_test_split, cross_val_score
 
-# 1. Ampliar el conjunto de datos con más preguntas
+# Conjunto de datos ampliado con preguntas y opciones
 data = [
-    # Preguntas de Primero
-    ("¿Cuánto es 2+2?", "Primero"),
-    ("¿Cuánto es 5-3?", "Primero"),
-    ("¿Cuál es el número siguiente a 3?", "Primero"),
-    
-    # Preguntas de Segundo
-    ("¿Cuál es la capital de tu país?", "Segundo"),
-    ("¿Quién fue Simón Bolívar?", "Segundo"),
-    ("¿Qué día celebramos la independencia?", "Segundo"),
-    
-    # Preguntas de Tercero
-    ("¿Qué es la fotosíntesis?", "Tercero"),
-    ("Nombra una parte de la célula", "Tercero"),
-    ("¿Qué son los mamíferos?", "Tercero"),
-    
-    # Preguntas de Cuarto
-    ("Define una oración completa", "Cuarto"),
-    ("¿Qué es un adjetivo?", "Cuarto"),
-    ("¿Qué es un sustantivo?", "Cuarto"),
-    
-    # Preguntas de Quinto
-    ("¿Cómo se conjuga el verbo 'to be' en inglés?", "Quinto"),
-    ("¿Cómo se dice 'perro' en inglés?", "Quinto"),
-    ("Escribe una oración en inglés con el verbo 'to be'", "Quinto")
+    ("¿Cuánto es 2+2?", "Primero", ["1", "2", "4", "5"]),
+    ("¿Qué forma tiene una pelota?", "Primero", ["Cuadrada", "Redonda", "Triangular", "Rectangular"]),
+    ("¿De qué color es el cielo durante el día?", "Primero", ["Rojo", "Azul", "Negro", "Verde"]),
+    ("¿Cómo se llama el día después de hoy?", "Primero", ["Ayer", "Mañana", "Hoy", "Nunca"]),
+    ("¿Qué viene después del número 5?", "Primero", ["4", "6", "8", "2"]),
+
+    ("¿Cuál es la capital de Colombia?", "Segundo", ["Bogotá", "Madrid", "Ciudad de México", "Lima"]),
+    ("¿Qué figura tiene cuatro lados iguales?", "Segundo", ["Triángulo", "Círculo", "Cuadrado", "Pentágono"]),
+    ("¿Qué planeta habitamos?", "Segundo", ["Marte", "Venus", "Tierra", "Saturno"]),
+    ("¿Cómo se llama el hermano de tu mamá?", "Segundo", ["Abuelo", "Tío", "Padre", "Primo"]),
+    ("¿Qué animal tiene trompa y es muy grande?", "Segundo", ["Tigre", "Elefante", "Zorro", "Cebra"]),
+
+    ("¿Qué es la fotosíntesis?", "Tercero", ["Respiración de animales", "Proceso en plantas", "Erosión de suelo", "Ciclo del agua"]),
+    ("¿Cuántos continentes hay en el mundo?", "Tercero", ["5", "6", "7", "8"]),
+    ("¿Qué país tiene forma de bota?", "Tercero", ["Brasil", "Italia", "Egipto", "Japón"]),
+    ("¿Qué gas respiran las plantas para hacer fotosíntesis?", "Tercero", ["Oxígeno", "Dióxido de carbono", "Nitrógeno", "Hidrógeno"]),
+    ("¿Cuál es la moneda de Colombia?", "Tercero", ["Peso", "Euro", "Dólar", "Yen"]),
+
+    ("Define una oración completa", "Cuarto", ["Conjunto de palabras con sentido", "Una palabra suelta", "Un dibujo", "Un número"]),
+    ("¿Cuál es el río más largo del mundo?", "Cuarto", ["Amazonas", "Nilo", "Yangtsé", "Danubio"]),
+    ("¿Qué es una fracción?", "Cuarto", ["Parte de un todo", "Un número entero", "Un animal", "Una máquina"]),
+    ("¿Qué órgano se encarga de bombear la sangre?", "Cuarto", ["Pulmones", "Hígado", "Corazón", "Cerebro"]),
+    ("¿Qué energía proviene del sol?", "Cuarto", ["Solar", "Eólica", "Hidráulica", "Térmica"]),
+
+    ("¿Cómo se conjuga el verbo 'to be' en inglés?", "Quinto", ["is, are, was", "do, does, did", "am, is, are", "will, shall, should"]),
+    ("¿Cuál es el sistema nervioso central del cuerpo?", "Quinto", ["Cerebro", "Estómago", "Huesos", "Pulmones"]),
+    ("¿Quién escribió 'El Quijote'?", "Quinto", ["Cervantes", "Shakespeare", "Borges", "Neruda"]),
+    ("¿Cuál es la fórmula química del agua?", "Quinto", ["H2O", "CO2", "O2", "NaCl"]),
+    ("¿Cuál es la raíz cuadrada de 144?", "Quinto", ["12", "14", "16", "18"])
 ]
 
-# Separar preguntas y etiquetas de grado
-preguntas, grados = zip(*data)
+# Separar preguntas, grados y opciones
+preguntas, grados, opciones = zip(*data)
 
-# 2. Vectorización de las preguntas
+# Vectorizar preguntas y codificar grados
 vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(preguntas)  # Convierte las preguntas a formato numérico
-
-# 3. Convertir las etiquetas de texto a etiquetas numéricas
+X = vectorizer.fit_transform(preguntas)
 encoder = LabelEncoder()
 y = encoder.fit_transform(grados)
 
-# 4. Entrenar el modelo utilizando validación cruzada para mejor evaluación
+# Dividir datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Entrenar el modelo
 modelo = MultinomialNB()
+modelo.fit(X_train, y_train)
 
-# Usar validación cruzada con 3 particiones (K-Fold Cross Validation)
-scores = cross_val_score(modelo, X, y, cv=3)
+# Validación cruzada
+scores = cross_val_score(modelo, X, y, cv=4)
+print(f"Precisión media del modelo: {np.mean(scores):.2f}")
 
-# 5. Mostrar resultados de la validación cruzada
-print("Precisión media de la validación cruzada:", np.mean(scores))
+# Sistema interactivo para responder preguntas
+print("\nBienvenido al sistema de predicción de grado escolar.")
+print("Por favor, responde las siguientes preguntas seleccionando una opción numérica:")
 
-# 6. Entrenar el modelo en todos los datos para hacer predicciones finales
-modelo.fit(X, y)
+nueva_pregunta = []
+for i, pregunta in enumerate(preguntas):
+    print(f"\nPregunta {i + 1}: {pregunta}")
+    for j, opcion in enumerate(opciones[i]):
+        print(f"{j + 1}. {opcion}")
+    
+    # Validar entrada del usuario
+    while True:
+        try:
+            respuesta = int(input("Selecciona una opción (1-4): "))
+            if 1 <= respuesta <= len(opciones[i]):
+                nueva_pregunta.append(opciones[i][respuesta - 1])
+                break
+            else:
+                print("Por favor selecciona una opción válida.")
+        except ValueError:
+            print("Entrada inválida. Por favor ingresa un número.")
 
-# Probar con una pregunta nueva
-nueva_pregunta = ["¿Qué es un sustantivo?"]
-nueva_pregunta_vec = vectorizer.transform(nueva_pregunta)
+# Convertir la nueva pregunta a un formato entendible por el modelo
+nueva_pregunta_str = " ".join(nueva_pregunta)
+nueva_pregunta_vec = vectorizer.transform([nueva_pregunta_str])
+
+# Predecir el grado escolar
 prediccion = modelo.predict(nueva_pregunta_vec)
-
-# Convertir predicción numérica de vuelta a texto
-prediccion_texto = encoder.inverse_transform(prediccion)
-
-print("Predicción para la nueva pregunta:", prediccion_texto[0])
+grado_predicho = encoder.inverse_transform(prediccion)
+print(f"\nEl modelo predice que el grado escolar es: {grado_predicho[0]}")
