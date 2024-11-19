@@ -8,6 +8,14 @@ Este proyecto implementa una **Inteligencia Artificial (IA)** en Python que pued
 - **Validación cruzada**: Se utiliza validación cruzada para evaluar el rendimiento del modelo.
 - **Algoritmo utilizado**: Naive Bayes Multinomial, ideal para problemas de clasificación de texto.
 
+### Cambios en la última actualización:
+- Agregado un sistema interactivo para que el usuario responda preguntas de selección única en la consola.
+- Ampliado el conjunto de datos con nuevas preguntas y opciones para todos los grados.
+- Añadido preprocesamiento de respuestas del usuario para integrarlas con el modelo de predicción.
+- Mejorada la robustez del sistema mediante validación de entradas en tiempo real.
+- Refinado el flujo del programa para presentar resultados de manera más clara.
+
+
 ## Requisitos
 
 Para ejecutar este proyecto necesitas tener instalados los siguientes paquetes:
@@ -25,6 +33,7 @@ pip install scikit-learn numpy
 - **Entrenamiento del modelo**: El modelo se entrena con un conjunto de preguntas predefinidas relacionadas con cada materia y grado escolar.
 - **Validación cruzada**: Se utiliza la validación cruzada con 3 particiones para evaluar la precisión del modelo.
 - **Predicción**: El modelo predice el grado escolar correspondiente a una nueva pregunta proporcionada.
+- **Interactividad**: El programa permite al usuario responder preguntas de selección única para obtener una predicción del grado escolar.
 ## Cómo Ejecutar el Proyecto
 1. Clona el repositorio:
 ```bash
@@ -36,46 +45,41 @@ cd Prototype
 ```
 3. Ejecuta el script principal:
 ```
-python main.py
+python Prototype.py
 ```
-## Ejemplo de Uso
-El script incluye un conjunto de datos con preguntas predefinidas para los cinco grados de primaria. Puedes agregar tus propias preguntas o modificar las existentes.
+## Estructura del Proyecto
+**Nuevas funcionalidades**
+- **Sistema interactivo para el usuario**: Ahora puedes responder preguntas de selección única mediante opciones numéricas (1-4). El sistema validará las respuestas para asegurarse de que sean válidas.
+- **Ampliación del conjunto de datos**: Se duplicó el número de preguntas y respuestas para abarcar un mayor rango de temas en cada grado escolar.
+- **Preprocesamiento de nuevas respuestas**: Las respuestas seleccionadas por el usuario se procesan y vectorizan antes de ser evaluadas por el modelo.
+- **Integración con el modelo Naive Bayes**: El modelo ahora utiliza las respuestas seleccionadas por el usuario para predecir el grado escolar de manera interactiva.
+- **Mejoras en la presentación de resultados**: Se mejoró la presentación de los resultados para una experiencia de usuario más clara y comprensible.
 
-## Entrenamiento y Validación
-El modelo se entrena usando las preguntas y luego se evalúa mediante validación cruzada:
+## Ejemplo de Salida
 
-```python
-# El conjunto de datos con preguntas
-data = [
-    ("¿Cuánto es 2+2?", "Primero"),
-    ("¿Cuál es la capital de tu país?", "Segundo"),
-    ("¿Qué es la fotosíntesis?", "Tercero"),
-    ("Define una oración completa", "Cuarto"),
-    ("¿Cómo se conjuga el verbo 'to be' en inglés?", "Quinto")
-]
+```Bienvenido al sistema de predicción de grado escolar.
+Por favor, responde las siguientes preguntas seleccionando una opción numérica:
 
-# Vectorización de las preguntas y codificación de etiquetas
-vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(preguntas)
-encoder = LabelEncoder()
-y = encoder.fit_transform(grados)
+Pregunta 1: ¿Cuánto es 2+2?
+1. 1
+2. 2
+3. 4
+4. 5
+Selecciona una opción (1-4): 3
 
-# Entrenamiento y validación cruzada
-modelo = MultinomialNB()
-scores = cross_val_score(modelo, X, y, cv=3)
-print("Precisión media:", np.mean(scores))
+Pregunta 2: ¿Qué forma tiene una pelota?
+1. Cuadrada
+2. Redonda
+3. Triangular
+4. Rectangular
+Selecciona una opción (1-4): 2
+
+...
+
+El modelo predice que el grado escolar es: Primero
 ```
 
-## Predicción de una nueva pregunta
-Puedes probar el modelo con una nueva pregunta:
 
-```python
-nueva_pregunta = ["¿Qué es un sustantivo?"]
-nueva_pregunta_vec = vectorizer.transform(nueva_pregunta)
-prediccion = modelo.predict(nueva_pregunta_vec)
-prediccion_texto = encoder.inverse_transform(prediccion)
-print("Predicción para la nueva pregunta:", prediccion_texto[0])
-```
 ## Authors
 
 - [@Mailet2997](https://github.com/mailet2997)
